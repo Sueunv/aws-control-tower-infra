@@ -14,7 +14,6 @@ permissions:
 
 jobs:
   terraform-ci:
-    name: Terraform Lint, Validate & Plan
     runs-on: ubuntu-latest
 
     defaults:
@@ -24,6 +23,15 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Print GitHub Context
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Actor: ${{ github.actor }}"
+
+      - name: Dump OIDC Token Claims
+        uses: github/actions-oidc-debugger@v1
 
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
