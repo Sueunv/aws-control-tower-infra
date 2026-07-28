@@ -3,7 +3,6 @@
 *.tfstate
 *.tfstate.*
 crash.log
-docker
 
 # Terraform override files
 override.tf
