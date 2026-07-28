@@ -18,7 +18,8 @@ jobs:
         working-directory: terraform
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Print GitHub Context
         run: |
@@ -26,23 +27,31 @@ jobs:
           echo "Ref = ${{ github.ref }}"
           echo "Actor = ${{ github.actor }}"
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::266359798362:role/GitHubActions-Terraform-AccountA
           aws-region: ap-south-1
 
-      - name: Verify Identity
+      - name: Verify AWS Identity
         run: aws sts get-caller-identity
 
-      - uses: hashicorp/setup-terraform@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.0
+          terraform_version: "1.10.5"
 
-      - run: terraform fmt -check
+      - name: Verify Terraform Version
+        run: terraform version
 
-      - run: terraform init
+      - name: Terraform Format Check
+        run: terraform fmt -check
 
-      - run: terraform validate
+      - name: Terraform Initialize
+        run: terraform init
 
-      - run: terraform plan -no-color
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
